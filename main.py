@@ -72,7 +72,7 @@ class Rock(pygame.sprite.Sprite):
         self.image_ori.set_colorkey(BLACK)
         self.image = self.image_ori.copy()
         self.rect = self.image.get_rect()
-        self.radius = self.rect.width / 2 * 0.85
+        self.radius = int(self.rect.width / 2 * 0.85)
         # pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = random.randrange(0, WIDTH - self.rect.width)
         self.rect.y = random.randrange(-180, -100)
@@ -124,6 +124,7 @@ for i in range(8):
     all_sprites.add(rock)
     rocks.add(rock)
 
+score = 0
 running = True
 
 while running:
@@ -139,7 +140,8 @@ while running:
     # 更新遊戲
     all_sprites.update() #執行群組內每個物件的update函式
     hits = pygame.sprite.groupcollide(rocks, bullets, True, True)
-    if hits:   ###這邊原本是 for hit in hits 不知道差在哪?
+    for hit in hits:
+        score += hit.radius
         rock = Rock()
         all_sprites.add(rock)
         rocks.add(rock)
@@ -149,6 +151,7 @@ while running:
     # 畫面顯示
     screen.fill(BLACK)
     screen.blit(background_img, (0, 0))
+    draw_text(screen, str(score), 20, WIDTH/2, 10)
     all_sprites.draw(screen) #將all_sprites群組內的每個東西畫到畫面上
     pygame.display.update()
 
